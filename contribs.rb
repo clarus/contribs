@@ -15,6 +15,8 @@ if contribs.size == 0 then
 end
 
 case ARGV[0]
+when "list"
+  puts contribs
 when "clone"
   username = ARGV[1]
   if username then
@@ -25,14 +27,17 @@ when "clone"
     puts "GForge username expected."
     exit(1)
   end
-when "list"
-  puts contribs
+when "checkout"
+  branch = ARGV[1]
+  if branch then
+    for contrib in contribs do
+      system("cd #{contrib} && git checkout #{branch}")
+    end
+  else
+    puts "Branch name expected."
+    exit(1)
+  end
 else
-  puts "\e[1;34mUsage:\e[0m
-
-    ruby contribs.rb command
-
-\e[1;34mCommands:\e[0m
-- clone username: clone the contribs with the GForge username
-- list: list the contribs"
+  print(File.read("README.md"))
+  exit(1)
 end
